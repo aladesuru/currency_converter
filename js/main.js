@@ -1,3 +1,12 @@
+var leftInput = document.getElementById("leftInput");
+var rightInput = document.getElementById("rightInput");
+var leftBoxPerRate = document.getElementById("leftBoxPerRate");
+var rightBoxPerRate = document.getElementById("rightBoxPerRate");
+var leftSelectBox = document.getElementById("leftSelectBox");
+var rightSelectBox = document.getElementById("rightSelectBox");
+var leftPerRate = 0;
+var rightPerRate = 0;
+
 // cross browser event Handler
 
 var eventUtilites = {
@@ -22,11 +31,12 @@ var eventUtilites = {
     }
 }
 
-
 // Loading daily exchange rate using AJAX
 
+var container = document.getElementById("container");
 var dailyExchangeRate = new XMLHttpRequest();
-dailyExchangeRate.onreadystatechange = function () {
+try{
+  dailyExchangeRate.onreadystatechange = function () {
   if (dailyExchangeRate.readyState === 4) {
 
     if (dailyExchangeRate.status === 200) {
@@ -37,8 +47,9 @@ dailyExchangeRate.onreadystatechange = function () {
 
 //populate the select box option tag value with the rate and text with country
 
-        var leftSelectBox = document.getElementById("leftSelectBox");
-        var rightSelectBox = document.getElementById("rightSelectBox");
+         leftSelectBox = document.getElementById("leftSelectBox");
+         rightSelectBox = document.getElementById("rightSelectBox");
+       
         var optionItem = "";
         for (var i = 0; i <= items.length - 1; i++) {
           
@@ -49,13 +60,12 @@ dailyExchangeRate.onreadystatechange = function () {
              optionItem += ' value=';
              optionItem +=  rate + ">" ;
              optionItem +=  currency ;
-             optionItem += '</option>' ;  
-
-                    
+             optionItem += '</option>' ;                      
         }
 
         leftSelectBox.innerHTML =  optionItem ;
-        rightSelectBox.innerHTML =  optionItem ;   
+        rightSelectBox.innerHTML =  optionItem ; 
+        container.style.opacity = 1 ; 
     }
 
   }
@@ -63,6 +73,13 @@ dailyExchangeRate.onreadystatechange = function () {
 
 dailyExchangeRate.open("GET" , "eurofxref-daily.xml");
 dailyExchangeRate.send();
+
+}catch(ex){
+  container.style.opacity = 1
+  container.innerHTML = '<div class="alert"> Please try again later </div>';
+}
+
+
 	
 
 
@@ -71,29 +88,27 @@ dailyExchangeRate.send();
 //  Or a user can input a value on the right and will 
 //automatically be converted to the other currency on the left
 
-var leftInput = document.getElementById("leftInput");
-var rightInput = document.getElementById("rightInput");
-var leftValueConverted = document.getElementById("leftValueConverted");
-var rightValueConverted = document.getElementById("rightValueConverted");
-var leftBoxPerRate = document.getElementById("leftBoxPerRate");
-var rightBoxPerRate = document.getElementById("rightBoxPerRate");
-var leftSelectBox = document.getElementById("leftSelectBox");
-var rightSelectBox = document.getElementById("rightSelectBox");
-var leftPerRate = 0;
-var rightPerRate = 0;
 
 
+// Helper functions
 
 function crossRate(selectedRate , toRate)
 {
 
   var result = 1 / (selectedRate.value);
   result = result * (toRate.value);
-  result = result.toFixed(8);
+  result = result.toFixed(4);
   // var PerRate = "1 " + selectedRate.options[selectedRate.selectedIndex].text + " = " +
   //                 result + " " + toRate.options[toRate.selectedIndex].text ;
 
   return result;
+}
+
+function convertedAmout(currencyFrom , toCurrency) {
+
+   var amount = toCurrency / currencyFrom ;
+    amount = amount.toFixed(2);
+    return amount;   
 }
 
 function selectBoxOnchange(event) {
@@ -107,6 +122,11 @@ function selectBoxOnchange(event) {
            leftPerRate = crossRate(leftSelectBox , rightSelectBox);
            leftBoxPerRate.innerHTML = "1 " + leftSelectBox.options[leftSelectBox.selectedIndex].text + " = " +
                   leftPerRate + " " + rightSelectBox.options[rightSelectBox.selectedIndex].text ;
+
+
+          rightPerRate = crossRate(rightSelectBox , leftSelectBox);
+          rightBoxPerRate.innerHTML = "1 " + rightSelectBox.options[rightSelectBox.selectedIndex].text + " = " +
+                  rightPerRate + " " + leftSelectBox.options[leftSelectBox.selectedIndex].text ;  
       }
 
       if (event.target.id === "rightSelectBox") {
@@ -114,6 +134,11 @@ function selectBoxOnchange(event) {
           rightPerRate = crossRate(rightSelectBox , leftSelectBox);
           rightBoxPerRate.innerHTML = "1 " + rightSelectBox.options[rightSelectBox.selectedIndex].text + " = " +
                   rightPerRate + " " + leftSelectBox.options[leftSelectBox.selectedIndex].text ;
+
+
+          leftPerRate = crossRate(leftSelectBox , rightSelectBox);
+           leftBoxPerRate.innerHTML = "1 " + leftSelectBox.options[leftSelectBox.selectedIndex].text + " = " +
+                  leftPerRate + " " + rightSelectBox.options[rightSelectBox.selectedIndex].text ;
       }    
   }
 
@@ -136,18 +161,48 @@ function inputOnchange(event) {
     target = eventUtilites.getTarget(event);
     var isNum = /[0-9]/;
 
-  if (event.target.tagName.toLowerCase() === "input") {
-     
-      if (event.target.id === "leftInput" && isNum.test(leftInput.value)){
-          rightInput.value = Math.round((leftInput.value / rightPerRate)) ;
-      }
-       console.log(event.target.tagName);
+  if (event.target.id === "leftInput") {
+     if (rightPerRate) {
+      if (isNum.test(leftInput.value) && leftInput.value !== 0){
+
+          var rightAmount = leftInput.value / rightPerRate;
+          rightInput.value = rightAmount.toFixed(2);
+
+      }else{
+
+        rightInput.value = "";
+      } 
   }
+
+  } else {
+    if (leftPerRate) {
+      if (event.target.id === "rightInput" && isNum.test(rightInput.value) && rightInput.value !== 0){
+
+          var leftAmount = rightInput.value / leftPerRate;
+          leftInput.value = leftAmount.toFixed(2);
+
+      }else{
+
+        leftInput.value = "";
+      } 
+  }
+
+  }
+
+
+
+
+ 
+  
+
+
 }
 
 // leftInput.onchange = inputOnchange ;
-leftInput.onclick = inputOnchange ;
 eventUtilites.addEventHandler(leftInput , "keypress" , inputOnchange);
 eventUtilites.addEventHandler(leftInput , "keyup" , inputOnchange);
+
+eventUtilites.addEventHandler(rightInput , "keypress" , inputOnchange);
+eventUtilites.addEventHandler(rightInput , "keyup" , inputOnchange);
 
 
