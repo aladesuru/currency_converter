@@ -55,7 +55,6 @@ form .connector span
 	text-shadow: 2px 2px #000;
 }
 
-
 #container .per-rate
 {
 	padding: 10px 0;
@@ -73,7 +72,6 @@ form .connector span
 	border-radius: 5px;
 	border: none;
 	outline: none;
-	padding-left: 5px;
 	box-sizing: border-box;
 }
 
@@ -82,7 +80,7 @@ form .connector span
 	background-color: #1f2b48;
 	color: #f5f5f5;
 	font-size: 1em;
-  padding: 60px 0 60px 5px;
+  padding: 60px 0px;
   text-align:center;
 }
 #container select
@@ -90,6 +88,11 @@ form .connector span
 	background-color: #293451;
 	color: #fff;
 }
+
+
+/* ==========================================================================
+   media query section
+   ========================================================================== */
 
 @media all and (max-width: 768px)
 {
@@ -102,7 +105,7 @@ form .connector span
   #container h1
 	{
 		text-align: center;
-    font-size: 1.1em;
+    font-size: 1.4em;
 	}
 }
 
@@ -169,13 +172,4 @@ form .connector span
   	font-size: 1.3em;
   }
 }
-
-
-.alert
-{
-  font-size: 1.8;
-  text-align: center;
-  color: #222;
-}
-
 

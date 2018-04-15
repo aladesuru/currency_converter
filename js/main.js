@@ -1,3 +1,6 @@
+/* ==========================================================================
+    Global variable declearation
+   ========================================================================== */
 var leftInput = document.getElementById("leftInput");
 var rightInput = document.getElementById("rightInput");
 var leftBoxPerRate = document.getElementById("leftBoxPerRate");
@@ -7,8 +10,10 @@ var rightSelectBox = document.getElementById("rightSelectBox");
 var leftPerRate = 0;
 var rightPerRate = 0;
 
-// cross browser event Handler
 
+/* ==========================================================================
+   cross browser event handler utilites
+   ========================================================================== */
 var eventUtilites = {
     addEventHandler: function(element , type , handler)
     {
@@ -31,8 +36,9 @@ var eventUtilites = {
     }
 }
 
-// Loading daily exchange rate using AJAX
-
+/* ==========================================================================
+   Load daily exchange rate using AJAX
+   ========================================================================== */
 var container = document.getElementById("container");
 var dailyExchangeRate = new XMLHttpRequest();
 try{
@@ -45,7 +51,8 @@ try{
         var cubeContainerElement = XMLDonContent.documentElement.getElementsByTagName('Cube')[1];
         var items = cubeContainerElement.getElementsByTagName("Cube");
 
-//populate the select box option tag value with the rate and text with country
+//populate the select box option tag value with the rate from XML file and ,
+// option tag text with country value from XML file
 
          leftSelectBox = document.getElementById("leftSelectBox");
          rightSelectBox = document.getElementById("rightSelectBox");
@@ -79,38 +86,22 @@ dailyExchangeRate.send();
   container.innerHTML = '<div class="alert"> Please try again later </div>';
 }
 
-
-	
-
-
-//  A user can input a value on the left box and the 
-//  value will be automatically converted to the appropriate currency value on the right
-//  Or a user can input a value on the right and will 
-//automatically be converted to the other currency on the left
-
-
-
-// Helper functions
-
+/* ==========================================================================
+   Helper functions use in calculating exchange rate between countries
+   ========================================================================== */
 function crossRate(selectedRate , toRate)
 {
-
   var result = 1 / (selectedRate.value);
   result = result * (toRate.value);
   result = result.toFixed(4);
-  // var PerRate = "1 " + selectedRate.options[selectedRate.selectedIndex].text + " = " +
-  //                 result + " " + toRate.options[toRate.selectedIndex].text ;
-
   return result;
 }
 
-function convertedAmout(currencyFrom , toCurrency) {
-
-   var amount = toCurrency / currencyFrom ;
-    amount = amount.toFixed(2);
-    return amount;   
-}
-
+/* ==========================================================================
+   user can select currencies to convert from and to using select box and 
+   display the currency per rate at the top of the select box.
+   either of the select box dynamically display per rate of the other select box
+   ========================================================================== */
 function selectBoxOnchange(event) {
      event = eventUtilites.getEvent(event);
      target = eventUtilites.getTarget(event);
@@ -143,20 +134,20 @@ function selectBoxOnchange(event) {
   }
 
 }
-
-
-//when select box is click or value is selected display the currency per rate 
-
 eventUtilites.addEventHandler(leftSelectBox , "click" , selectBoxOnchange);
 eventUtilites.addEventHandler(leftSelectBox , "change" , selectBoxOnchange);
-
 eventUtilites.addEventHandler(rightSelectBox , "click" , selectBoxOnchange);
 eventUtilites.addEventHandler(rightSelectBox , "change" , selectBoxOnchange);
 
 
-//when input value change or key is release calculate 
+/* ==========================================================================
+   when a user input a value on the left box the value will be automatically 
+   converted to the appropriate currency value on the right
+   Or 
+   when a user input a value on the right box the value will be automatically 
+   converted to the other currency on the left
+   ========================================================================== */
 function inputOnchange(event) {
-
     event = eventUtilites.getEvent(event);
     target = eventUtilites.getTarget(event);
     var isNum = /[0-9]/;
@@ -189,19 +180,10 @@ function inputOnchange(event) {
 
   }
 
-
-
-
- 
-  
-
-
 }
 
-// leftInput.onchange = inputOnchange ;
 eventUtilites.addEventHandler(leftInput , "keypress" , inputOnchange);
 eventUtilites.addEventHandler(leftInput , "keyup" , inputOnchange);
-
 eventUtilites.addEventHandler(rightInput , "keypress" , inputOnchange);
 eventUtilites.addEventHandler(rightInput , "keyup" , inputOnchange);
 
