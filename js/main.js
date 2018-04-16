@@ -54,7 +54,7 @@ try{
 //populate the select box option tag value with the rate from XML file and ,
 // option tag text with country value from XML file
        
-        var optionItem = "";
+        var optionItem = "<option>Select Currency</option>";
         for (var i = 0; i <= items.length - 1; i++) {
           
              var rate =  items[i].getAttribute('rate');
@@ -90,10 +90,10 @@ dailyExchangeRate.send();
    ========================================================================== */
 function crossRate(selectedRate , toRate)
 {
-  var result = 1 / (selectedRate.value);
-  result = result * (toRate.value);
-  result = result.toFixed(4);
-  return result;
+    var result = 1 / (selectedRate.value);
+    result = result * (toRate.value);
+    result = result.toFixed(4);
+    return result;  
 }
 
 /* ==========================================================================
@@ -106,8 +106,9 @@ function selectBoxOnchange(event) {
      target = eventUtilites.getTarget(event);
 
       if (event.target.id === "leftSelectBox") {
+          if (leftSelectBox.value !== "Select Currency" && rightSelectBox.value !== "Select Currency") {
+             leftPerRate = crossRate(leftSelectBox , rightSelectBox);
 
-           leftPerRate = crossRate(leftSelectBox , rightSelectBox);
            leftBoxPerRate.innerHTML = "1 " + leftSelectBox.options[leftSelectBox.selectedIndex].text + " = " +
                   leftPerRate + " " + rightSelectBox.options[rightSelectBox.selectedIndex].text ;
 
@@ -115,20 +116,29 @@ function selectBoxOnchange(event) {
           rightPerRate = crossRate(rightSelectBox , leftSelectBox);
           rightBoxPerRate.innerHTML = "1 " + rightSelectBox.options[rightSelectBox.selectedIndex].text + " = " +
                   rightPerRate + " " + leftSelectBox.options[leftSelectBox.selectedIndex].text ;  
+
+          } else {
+            rightBoxPerRate.innerHTML = "";
+          }   
+           
       }
 
       if (event.target.id === "rightSelectBox") {
+         if (rightSelectBox.value !== "Select Currency" && leftSelectBox.value !== "Select Currency") {
+            rightPerRate = crossRate(rightSelectBox , leftSelectBox);
+            rightBoxPerRate.innerHTML = "1 " + rightSelectBox.options[rightSelectBox.selectedIndex].text + " = " +
+                    rightPerRate + " " + leftSelectBox.options[leftSelectBox.selectedIndex].text ;
 
-          rightPerRate = crossRate(rightSelectBox , leftSelectBox);
-          rightBoxPerRate.innerHTML = "1 " + rightSelectBox.options[rightSelectBox.selectedIndex].text + " = " +
-                  rightPerRate + " " + leftSelectBox.options[leftSelectBox.selectedIndex].text ;
 
+            leftPerRate = crossRate(leftSelectBox , rightSelectBox);
+             leftBoxPerRate.innerHTML = "1 " + leftSelectBox.options[leftSelectBox.selectedIndex].text + " = " +
+                    leftPerRate + " " + rightSelectBox.options[rightSelectBox.selectedIndex].text ;
+         } else {
+             rightBoxPerRate.innerHTML = "";
+         }
 
-          leftPerRate = crossRate(leftSelectBox , rightSelectBox);
-           leftBoxPerRate.innerHTML = "1 " + leftSelectBox.options[leftSelectBox.selectedIndex].text + " = " +
-                  leftPerRate + " " + rightSelectBox.options[rightSelectBox.selectedIndex].text ;
+          
       }    
-
 }
 
 eventUtilites.addEventHandler(leftSelectBox , "click" , selectBoxOnchange);
