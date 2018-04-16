@@ -12,7 +12,7 @@ var rightPerRate = 0;
 
 
 /* ==========================================================================
-   cross browser event handler utilites
+   cross browser event handler utilites 
    ========================================================================== */
 var eventUtilites = {
     addEventHandler: function(element , type , handler)
@@ -53,9 +53,6 @@ try{
 
 //populate the select box option tag value with the rate from XML file and ,
 // option tag text with country value from XML file
-
-         leftSelectBox = document.getElementById("leftSelectBox");
-         rightSelectBox = document.getElementById("rightSelectBox");
        
         var optionItem = "";
         for (var i = 0; i <= items.length - 1; i++) {
@@ -106,8 +103,6 @@ function selectBoxOnchange(event) {
      event = eventUtilites.getEvent(event);
      target = eventUtilites.getTarget(event);
 
-     if(event.target.tagName.toLowerCase() == "select"){
-
       if (event.target.id === "leftSelectBox") {
 
            leftPerRate = crossRate(leftSelectBox , rightSelectBox);
@@ -131,9 +126,9 @@ function selectBoxOnchange(event) {
            leftBoxPerRate.innerHTML = "1 " + leftSelectBox.options[leftSelectBox.selectedIndex].text + " = " +
                   leftPerRate + " " + rightSelectBox.options[rightSelectBox.selectedIndex].text ;
       }    
-  }
 
 }
+
 eventUtilites.addEventHandler(leftSelectBox , "click" , selectBoxOnchange);
 eventUtilites.addEventHandler(leftSelectBox , "change" , selectBoxOnchange);
 eventUtilites.addEventHandler(rightSelectBox , "click" , selectBoxOnchange);
@@ -150,14 +145,19 @@ eventUtilites.addEventHandler(rightSelectBox , "change" , selectBoxOnchange);
 function inputOnchange(event) {
     event = eventUtilites.getEvent(event);
     target = eventUtilites.getTarget(event);
-    var isNum = /[0-9]/;
+    var isNum = /[0-9]/; // set pattern to match input value with to make sure only number 
 
-  if (event.target.id === "leftInput") {
+// checking each element of input to perform right calculation 
+
+  if (event.target.id === "leftInput") {  
      if (rightPerRate) {
-      if (isNum.test(leftInput.value) && leftInput.value !== 0){
+      if (isNum.test(leftInput.value) && leftInput.value !== 0){ 
 
           var rightAmount = leftInput.value / rightPerRate;
-          rightInput.value = rightAmount.toFixed(2);
+          if(!isNaN(rightAmount)){                    // check if the operation fail as a result invalid input
+            rightInput.value = rightAmount.toFixed(2) 
+          }else{ rightInput.value = "" }
+          
 
       }else{
 
@@ -170,7 +170,9 @@ function inputOnchange(event) {
       if (event.target.id === "rightInput" && isNum.test(rightInput.value) && rightInput.value !== 0){
 
           var leftAmount = rightInput.value / leftPerRate;
-          leftInput.value = leftAmount.toFixed(2);
+          if(!isNaN(leftAmount)){                     // check if the operation fail as a result invalid input
+            leftInput.value = leftAmount.toFixed(2) 
+          }else{ leftInput.value  = "" }
 
       }else{
 
