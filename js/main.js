@@ -70,6 +70,7 @@ try{
         leftSelectBox.innerHTML =  optionItem ;
         rightSelectBox.innerHTML =  optionItem ; 
         container.style.opacity = 1 ; 
+        container.style.transform = "scale(1)";
     }
 
   }
@@ -80,6 +81,7 @@ dailyExchangeRate.send();
 
 }catch(ex){
   container.style.opacity = 1
+  container.style.opacity = 1 ; 
   container.innerHTML = '<div class="alert"> Please try again later </div>';
 }
 

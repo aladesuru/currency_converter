@@ -26,6 +26,7 @@
   padding: 10px 1%;
   opacity: 0;
   transition: all .55s; 
+  transform: scale(.5);
 }
 
 #container h1
@@ -38,7 +39,7 @@
 #container .card
 {
 	background-color: #1f2b48;
-	margin: 10PX 0;
+	margin: 10PX 0 0 0;
 }
 
 #container .connector
